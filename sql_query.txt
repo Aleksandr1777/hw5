@@ -1,0 +1,42 @@
+CREATE DATABASE test; 
+
+CREATE TABLE questions(id SERIAL PRIMARY KEY, text VARCHAR(200) NOT NULL UNIQUE);  
+
+INSERT INTO questions(text) 
+VALUES('Что такое интерфейс в Java?'),  
+	('Какова цель метода «public static void main (String [] args)» в Java?'), 
+	('Что такое наследование в Java?');  
+	
+SELECT * FROM questions;  
+
+CREATE TABLE answer_options
+(
+	id SERIAL PRIMARY KEY, 
+	text VARCHAR(100),  
+	question INT NOT NULL,  
+	is_true BOOLEAN NOT NULL, 
+	FOREIGN KEY (question) REFERENCES questions(id)
+);  
+
+INSERT INTO answer_options(text,question, is_true)
+VALUES 
+	('Схема классов',1,false),
+	('Тип, который может содержать методы, поля и внутренние классы',1,false), 
+	('Набор абстрактных методов и константных значений',1,true),
+	('Набор связанных классов',1,false),
+	('Он объявляет основной метод для приложения Java',2,false), 
+	('Он указывает начальную точку для приложения Java',2,false), 
+	('Он позволяет приложению Java принимать аргументы командной строки',2,false),
+	('Все вышеперечисленное',2,true),
+	('Механизм создания новых классов из существующих классов',3,true),
+	('Механизм совместного использования методов и полей между классам',3,false),
+	('Механизм повторного использования существующего кода в новых приложениях',3,false),
+	('Все вышеперечисленное',3,false);  
+	
+SELECT * FROM answer_options; 
+
+SELECT * FROM answer_options INNER JOIN questions ON answer_options.question = questions.id; 
+
+SELECT questions.text, answer_options.text
+FROM questions INNER JOIN answer_options ON questions.id = answer_options.question
+WHERE is_true = true; 
