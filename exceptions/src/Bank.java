@@ -20,8 +20,8 @@ public class Bank {
         }
     }
 
-    public static double divideMoney(int money, int parts){
-        double result;
+    public static int divideMoney(int money, int parts){
+        int result;
         try{
             result = money/parts;
         } catch (ArithmeticException e){

@@ -117,8 +117,8 @@ public class Shop {
          сразу же будет перехвачено и проброшено дальше (соответствует пункту дз
          пробрасывание ошибки) */
         try {
-            double result1 = Bank.divideMoney(15, 4);
-            double result2 = Bank.divideMoney(15,0);
+            int result1 = Bank.divideMoney(15, 4);
+            int result2 = Bank.divideMoney(15,0);
 
             System.out.println(result1);
             System.out.println(result2);
