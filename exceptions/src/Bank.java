@@ -19,4 +19,16 @@ public class Bank {
             System.out.println(pair.getKey() + pair.getValue());
         }
     }
+
+    public static double divideMoney(int money, int parts){
+        double result;
+        try{
+            result = money/parts;
+        } catch (ArithmeticException e){
+            throw e;
+        }
+        return result;
+    }
+
+
 }

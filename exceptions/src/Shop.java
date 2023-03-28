@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +29,18 @@ public class Shop {
         /*сперва customerIvanov покупает конфету, у него достаточно на это денег
         Если вдруг денег не хватит или товара не будет в наличии будет выведено соответствующее сообщение
         (обработка ошибки путём вывода на экран сообщения об ошибке)
+
+        если customerIvanov успешно покупает конфету, он записыет об этом в файл, передавая имя файла в
+        метод writeInformationAboutShopping(String fileName, Item item). Если на позицию fileName вместо
+        названия файла передать директорию, то метод выбросит IOException, которое внутри метода writeInformationAboutShopping
+        оборачивается в MyIOException и пробрасывается дальше (это соответствует пункту дз оборачивание ошибки
+        в новую)
         */
 
         Item candy = new Item("конфета",5);
         try{
             customerIvanov.buy(shop,candy);
+            customerIvanov.writeInformationAboutShopping("C:\\Users\\dmitr\\java\\javarush\\archiver\\information.txt",candy);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -43,14 +51,15 @@ public class Shop {
         Если книги нет в наличии, будет выведено сответсвующее сообщение.
         Если книга есть в наличии, но у customerIvanov не хватает денег, он будет несколько раз
         брать их в долг в банке и снова пытаться купить книгу, если денег всё равно не хватит
-        будет выведео сообщение об ошибке
+        будет выведено сообщение об ошибке (обработка исключения путём повторного использования кода)
         */
 
         Item book = new Item("книга",11);
         try {
             customerIvanov.buy(shop, book);
+            customerIvanov.writeInformationAboutShopping("C:\\Users\\dmitr\\java\\javarush\\archiver\\information.txt",book);
         }
-        catch (ItemNotFoundException e){
+        catch (ItemNotFoundException | MyIOException e){
             System.out.println(e.getMessage());
         }
         catch (NotEnoughtMoneyException e){
@@ -60,9 +69,13 @@ public class Shop {
                 customerIvanov.lend(bank,5);
                 customerIvanov.buy(shop,book);
                 success = true;
+                customerIvanov.writeInformationAboutShopping("C:\\Users\\dmitr\\java\\javarush\\archiver\\information.txt",book);
                 System.out.println("вы взяли в долг и всё таки купили товар");
                 break;
-                } catch (ItemNotFoundException  | NotEnoughtMoneyException ee){
+                }catch (MyIOException ee){
+                    System.out.println(ee.getMessage());
+                }
+                catch (ItemNotFoundException  | NotEnoughtMoneyException ee){
                 }
             }if (!success){
                 System.out.println(e.getMessage());
@@ -98,6 +111,21 @@ public class Shop {
         //Данный метод позволяет посмотреть состояние массива Bank.accounts
         Bank.printBank();
 
+        /*метод divideMoney(double money, int parts) класс Bank служит чтобы
+        делить деньги на равные части и узнавать размер одной части, если в параметре
+         parts передать 0, то в методе будет выброшено ArithmeticException, которое
+         сразу же будет перехвачено и проброшено дальше (соответствует пункту дз
+         пробрасывание ошибки) */
+        try {
+            double result1 = Bank.divideMoney(15, 4);
+            double result2 = Bank.divideMoney(15,0);
+
+            System.out.println(result1);
+            System.out.println(result2);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
     }
     public static void initShop(Shop shop){
         Item item1 = new Item("книга",11);
