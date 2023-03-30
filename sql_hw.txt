@@ -1,0 +1,63 @@
+CREATE TABLE answers(
+	id SERIAL PRIMARY KEY,
+	answer VARCHAR(100) NOT NULL UNIQUE
+);  
+
+INSERT INTO answers(answer) 
+VALUES 
+	('Схема классов'),
+	('Тип, который может содержать методы, поля и внутренние классы'), 
+	('Набор абстрактных методов и константных значений'),
+	('Набор связанных классов'),
+	('Он объявляет основной метод для приложения Java'), 
+	('Он указывает начальную точку для приложения Java'), 
+	('Он позволяет приложению Java принимать аргументы командной строки'),
+	('Все вышеперечисленное'),
+	('Механизм создания новых классов из существующих классов'),
+	('Механизм совместного использования методов и полей между классам'),
+	('Механизм повторного использования существующего кода в новых приложениях'); 
+	
+SELECT * FROM answers;  
+
+CREATE TABLE questions(id SERIAL PRIMARY KEY, 
+					   text VARCHAR(200) NOT NULL UNIQUE,
+					   right_answer INT NOT NULL,  
+					   FOREIGN KEY(right_answer) REFERENCES answers(id)
+); 
+
+INSERT INTO questions(text,right_answer) 
+VALUES('Что такое интерфейс в Java?',3),  
+	('Какова цель метода «public static void main (String [] args)» в Java?',8), 
+	('Что такое наследование в Java?',9);  
+
+SELECT * FROM questions;   
+
+SELECT text,answer FROM questions 
+		INNER JOIN answers ON right_answer = answers.id;  
+		
+CREATE TABLE question_to_answer(question_to_answer_id SERIAL PRIMARY KEY, 
+								question_id INT, 
+								answer_id INT, 
+							   FOREIGN KEY (question_id) REFERENCES questions(id), 
+							   FOREIGN KEY (answer_id) REFERENCES answers(id));  
+							   
+INSERT INTO question_to_answer(question_id, answer_id) 
+VALUES(1,1), 
+	(1,2), 
+	(1,3), 
+	(1,4), 
+	(2,5), 
+	(2,6),
+	(2,7),
+	(2,8), 
+	(3,9),  
+	(3,10), 
+	(3,11), 
+	(3,8);  
+	
+	
+SELECT * FROM question_to_answer;  
+
+SELECT questions.text, answers.answer 
+FROM questions INNER JOIN question_to_answer ON questions.id = question_to_answer.question_id 
+INNER JOIN answers ON question_to_answer.answer_id = answers.id;
